@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+  <meta charset='utf-8' />
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js'></script>
+  <input name="title" id="t" type="text" placeholder="כותרת האירוע">
+  <input name="date" id="d" type="date">
+  <button onclick="postEvent()"> שמירת העדכון או להוספה</button>
+  <button onclick="updateEvent()">לעדכון</button>
+  <button onclick="deleteEvent()">למחיקה</button>
+  <select id="sel">
+    <option>1</option>
+    <option>2</option>
+  </select>
+  <script>
+    
+
+    document.addEventListener('DOMContentLoaded', function () {
+ 
+      axios.get('https://eventsapi.onrender.com/api/Events').then((res) => {
+        var calendarEl = document.getElementById("calendar");
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+          initialView: 'dayGridMonth',
+          events: res.data,
+        });
+        calendar.render();
+      });
+    });
+    function postEvent () {
+    var t = document.getElementById("t").value;
+    var d = document.getElementById("d").value;
+        axios.post("https://eventsapi.onrender.com/api/Events", {
+        "title": t,
+        "start": d
+    }).then(res => {
+        console.log(res.data)
+      //  var option = document.createElement("option");
+      //  option.text = t;
+      //  document.getElementById("sel").add(option);
+
+      })
+    }
+    function deleteEvent() {
+      axios.delete("hhttps://eventsapi.onrender.com/api/Events/${id}").then(res => {
+        console.log(res.data)
+      })
+
+    }
+    function updateEvent() {
+      document.getElementById("t").value = document.getElementById("sel").value;
+      axios.put("https://eventsapi.onrender.com/api/Events/${id}", {
+        "title": t,
+        "start": d
+    }).then(res => {
+        console.log(res.data)
+      })
+
+    }
+
+
+
+
+  </script>
+</head>
+
+<body>
+  <div id='calendar'></div>
+</body>
+
+</html>
